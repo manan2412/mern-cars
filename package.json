@@ -1,0 +1,27 @@
+{
+  "name": "mern-cars",
+  "version": "1.0.0",
+  "description": "A marketplace for cars on a MERN stack.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./server/index.js",
+    "dev": "nodemon ./server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manan2412/mern-cars.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manan2412/mern-cars/issues"
+  },
+  "homepage": "https://github.com/manan2412/mern-cars#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
