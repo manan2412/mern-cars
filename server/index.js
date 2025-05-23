@@ -27,7 +27,8 @@ app.use("/server/auth", authRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
+  // const message = err.message + " from next()" || "Internal Server Error!!";
+  const message = err.message || "Internal Server Error!!";
   return res.status(statusCode).json({
     success: false,
     statusCode,
