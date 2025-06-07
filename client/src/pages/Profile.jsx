@@ -21,21 +21,23 @@ export default function Profile() {
     try {
       const oneMb = 1024 * 1024;
       const fileSizeMB = Math.round(file.size / oneMb);
-      console.log(`file size mb: ${fileSizeMB}`);
-      console.log(`file type: ${file.type}`);
-      if (!file.type.match('image.*')) {
-        throw error
+      // console.log(`file size mb: ${fileSizeMB}`);
+      // console.log(`file type: ${file.type}`);
+      if (!file.type.match("image.*")) {
+        throw error;
       }
       if (fileSizeMB > 100) {
         throw error;
       }
       const data = new FileReader();
-      setFormData({ ...formData, avatar: file });
-      // console.log(`formData: ${formData}`);
+      console.log(`formData before: ${JSON.stringify(formData)}`);
+
       data.addEventListener("load", () => {
         setFileUploadError(false);
-        console.log(`Data.result: ${data.result}`);
+        // console.log(`Data.result: ${data.result}`);
         document.getElementById("profile-img").src = data.result;
+        setFormData({ ...formData, avatar: data.result });
+        console.log(`formData after: ${Object.entries(formData)}`);
       });
 
       data.readAsDataURL(file);
