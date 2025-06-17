@@ -1,6 +1,89 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useState } from "react";
+import { set } from "mongoose";
 
 export default function CreateListing() {
+  const [files, setFiles] = useState([]);
+  const [formData, setFormData] = useState({
+    imageUrls: [],
+  });
+  const [imageUploadError, setImageUploadError] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  // useEffect(() => {
+  //   console.log(formData);
+  // }, [formData]);
+
+  const clearFileInput = () => {
+    const fileInput = document.getElementById("images");
+    fileInput.value = "";
+  };
+  const addImageInForm = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        let data = fileReader.result;
+        resolve(data);
+      });
+      fileReader.readAsDataURL(file);
+    });
+  };
+
+  const handleImageSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      if (files.length > 0 && files.length + formData.imageUrls.length < 5) {
+        setUploading(true);
+        setImageUploadError(false);
+        const promises = [];
+        for (let i = 0; i < files.length; i++) {
+          let file = files[i];
+          const oneMb = 1024 * 1024;
+          const fileSizeMB = Math.round(file.size / oneMb);
+
+          if (!file.type.match("image.*")) {
+            throw error;
+          }
+          if (fileSizeMB > 100) {
+            throw error;
+          }
+
+          promises.push(addImageInForm(file));
+          Promise.all(promises).then((data) => {
+            setFormData({
+              ...formData,
+              imageUrls: formData.imageUrls.concat(data),
+            });
+          });
+        }
+      } else {
+        setImageUploadError("You can only upload 2 image per listing");
+        setUploading(false);
+      }
+    } catch (error) {
+      // console.log(error.message);
+      setImageUploadError("Please Upload Again");
+      setUploading(false);
+    } finally {
+      setUploading(false);
+      clearFileInput();
+    }
+  };
+
+  const handleRemoveImage = (fileIndex) => {
+    try {
+      setFormData({
+        ...formData,
+        imageUrls: formData.imageUrls.filter((_, i) => i !== fileIndex),
+      });
+    } catch (error) {
+      // console.log(error.message);
+    } finally {
+      clearFileInput();
+      setImageUploadError(false);
+    }
+  };
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
@@ -34,24 +117,24 @@ export default function CreateListing() {
           <div className="flex gap-6 flex-wrap">
             <div className="flex gap-2">
               <input type="radio" id="hatchback" className="w-5" name="type" />
-              <label for="hatchback">Hatchback</label>
+              <label htmlFor="hatchback">Hatchback</label>
             </div>
             <div className="flex gap-2">
               <input type="radio" id="sedan" className="w-5" name="type" />
-              <label for="sedan">Sedan</label>
+              <label htmlFor="sedan">Sedan</label>
             </div>
             <div className="flex gap-2">
               <input type="radio" id="suv" className="w-5" name="type" />
-              <label for="suv">SUV</label>
+              <label htmlFor="suv">SUV</label>
             </div>
             <div className="flex gap-2">
               <input type="radio" id="coupe" className="w-5" name="type" />
-              <label for="coupe">Coupe</label>
+              <label htmlFor="coupe">Coupe</label>
             </div>
           </div>
           <div className="flex gap-6">
             <input type="checkbox" id="offer" className="w-5" />
-            <label for="offer">Offer</label>
+            <label htmlFor="offer">Offer</label>
           </div>
           <div className="flex flex-wrap gap-6">
             <div className="flex items-center gap-2">
@@ -116,16 +199,51 @@ export default function CreateListing() {
           <div className="flex gap-4">
             <input
               className="p-3 border border-gray-300 rounded w-full"
+              onChange={(e) => {
+                setFiles(e.target.files);
+                setImageUploadError(false);
+              }}
               type="file"
               id="images"
               accept="image/*"
               multiple
-            //   value="kk"
             />
-            <button className=" p-3 text-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80">
-              Upload
+            <button
+              className=" p-3 text-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80"
+              disabled={uploading}
+              onClick={handleImageSubmit}
+            >
+              {uploading ? "Uploading..." : "Upload"}
             </button>
           </div>
+          <div>
+            <p className="text-red-700 text-sm">
+              {imageUploadError ? imageUploadError : ""}
+            </p>
+            {formData.imageUrls.length > 0 &&
+              formData.imageUrls.map((url, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col flex-wrap justify-between p-3 border items-center"
+                >
+                  <img
+                    src={url}
+                    alt="listing image"
+                    className="w-auto h-auto object-contain rounded-lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(index)}
+                    className="p-3 items-start text-red-700 rounded-lg uppercase hover:opacity-75"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+          </div>
+          <button className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opactiy-95 disabled:opacity-80">
+            Create Listing
+          </button>
         </div>
       </form>
     </main>

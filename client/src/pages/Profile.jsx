@@ -44,7 +44,7 @@ export default function Profile() {
       if (fileSizeMB > 100) {
         throw error;
       }
-      const data = new FileReader();
+      const s = new FileReader();
       console.log(`formData before: ${JSON.stringify(formData)}`);
 
       data.addEventListener("load", () => {
