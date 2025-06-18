@@ -5,6 +5,8 @@ import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 import listingRouter from "./routes/listing.route.js";
 import cookieParser from "cookie-parser";
+import bodyParser  from "body-parser";
+
 
 dotenv.config();
 
@@ -19,8 +21,11 @@ mongoose
 
 const app = express();
 
-app.use(express.json());
+// app.use(express.json());
 app.use(cookieParser());
+
+app.use(bodyParser.json({ limit: '20mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 app.listen(3000, () => {
   console.log("Server Listening port 3000...");
