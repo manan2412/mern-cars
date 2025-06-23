@@ -13,7 +13,7 @@ import {
   signOutUserFailure,
 } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 import Listing from "../../../server/models/listing.model.js";
 
 export default function Profile() {
@@ -30,7 +30,6 @@ export default function Profile() {
   useEffect(() => {
     if (file) {
       // console.log(`type of fil/e: ${typeof file}`);
-
       handleFileUpload(file);
     }
   }, [file]);
@@ -265,7 +264,7 @@ export default function Profile() {
                 className="text-slate-700 font-semibold hover:underline truncate flex-1"
                 to={`/listing/${listing._id}`}
               >
-                <p>{listing.name}</p>
+                <p>{listing.title}</p>
               </Link>
               <div className="flex flex-col items-center">
                 <button
@@ -274,7 +273,9 @@ export default function Profile() {
                 >
                   Delete
                 </button>
-                <button className="text-green-700 uppercase">Edit</button>
+                <Link to={`/update-listing/${listing._id}`}>
+                  <button className="text-green-700 uppercase">Edit</button>
+                </Link>
               </div>
             </div>
           ))}
