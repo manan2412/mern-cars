@@ -14,7 +14,7 @@ export default function CreateListing() {
     description: "",
     address: "",
     type: "hatchback",
-    regularPrice: 1000,
+    regularPrice: 100000,
     discountPrice: 0,
     noOfSeats: 4,
     noOfOwner: 1,
@@ -30,7 +30,7 @@ export default function CreateListing() {
   }, [formData]);
 
   const handleChange = (e) => {
-    setError("")
+    setError("");
     if (
       e.target.id === "hatchback" ||
       e.target.id === "sedan" ||
@@ -290,8 +290,8 @@ export default function CreateListing() {
               <input
                 type="number"
                 id="regularPrice"
-                min="1000"
-                max="100000"
+                min="100000"
+                max="5000000"
                 required
                 onChange={handleChange}
                 value={formData.regularPrice}
@@ -307,8 +307,8 @@ export default function CreateListing() {
                 <input
                   type="number"
                   id="discountPrice"
-                  min="1000"
-                  max="100000"
+                  min="100000"
+                  max="5000000"
                   required
                   onChange={handleChange}
                   value={formData.discountPrice}

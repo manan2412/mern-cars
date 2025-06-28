@@ -278,7 +278,7 @@ export default function UpdateListing() {
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                id="owner"
+                id="noOfOwner"
                 min="1"
                 max="5"
                 required
@@ -291,7 +291,7 @@ export default function UpdateListing() {
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                id="seats"
+                id="noOfSeats"
                 min="1"
                 max="10"
                 required
@@ -305,8 +305,8 @@ export default function UpdateListing() {
               <input
                 type="number"
                 id="regularPrice"
-                min="1000"
-                max="100000"
+                min="100000"
+                  max="5000000"
                 required
                 onChange={handleChange}
                 value={formData.regularPrice}
@@ -322,8 +322,8 @@ export default function UpdateListing() {
                 <input
                   type="number"
                   id="discountPrice"
-                  min="1000"
-                  max="100000"
+                  min="100000"
+                  max="5000000"
                   required
                   onChange={handleChange}
                   value={formData.discountPrice}
@@ -393,7 +393,7 @@ export default function UpdateListing() {
             disabled={loading | uploading}
             className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opactiy-95 disabled:opacity-80"
           >
-            {loading ? "Creating..." : "Create Listing"}
+            {loading ? "Updating..." : "Update Listing"}
           </button>
           {error && <p className="text-red-700 text-sm">{error}</p>}
         </div>
