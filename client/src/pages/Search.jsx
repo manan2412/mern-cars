@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import ListingItem from "../components/ListingItem";
+import { set } from "mongoose";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -14,17 +15,25 @@ export default function Search() {
   });
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
+  const [showMore, setShowMore] = useState(false);
   console.log(sidebardata);
   // console.log(location.search);
 
   const fetchListings = async () => {
     try {
       setLoading(true);
+      setShowMore(false);
       const urlParams = new URLSearchParams(location.search);
       const searchQuery = urlParams.toString();
       console.log(searchQuery);
       const res = await fetch(`/server/listing/get?${searchQuery}`);
       const data = await res.json();
+
+      if (data.length > 8) {
+        setShowMore(true);
+      } else {
+        setShowMore(false);
+      }
       setListings(data);
       setLoading(false);
     } catch (error) {
@@ -97,6 +106,27 @@ export default function Search() {
     fetchListings();
   };
 
+  const onShowMoreClick = async () => {
+    const numberOfListings = listings.length;
+    const startIndex = numberOfListings;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    try {
+      const res = await fetch(`/server/listing/get?${searchQuery}`);
+      const data = await res.json();
+      if (data.length < 9) {
+        setShowMore(false);
+      }
+      setListings([...listings, ...data]);
+      setLoading(false);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row">
       <div className="p-7 border-slate-200 border-b-2 md:border-r-2 md:min-h-screen">
@@ -136,7 +166,7 @@ export default function Search() {
                 type="radio"
                 name="type"
                 id="all"
-                defaultChecked = {true}
+                defaultChecked={true}
                 className="w-5"
                 onChange={handleChange}
                 value={sidebardata.type === "all"}
@@ -228,6 +258,14 @@ export default function Search() {
             listings.map((listing) => (
               <ListingItem key={listing._id} listing={listing} />
             ))}
+          {showMore && (
+            <button
+              onClick={onShowMoreClick}
+              className="text-green-700 hover:underline p-7 text-center w-full"
+            >
+              Show more
+            </button>
+          )}
         </div>
       </div>
     </div>
