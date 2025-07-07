@@ -63,7 +63,7 @@ export const getListings = async (req, res, next) => {
   try {
     const limit = parseInt(req.query.limit) || 9;
     const startIndex = parseInt(req.query.startIndex) || 0;
-
+    console.log(req.query);
     let offer = req.query.offer;
     if (offer === undefined || offer === "false") {
       offer = { $in: [false, true] };
@@ -79,7 +79,7 @@ export const getListings = async (req, res, next) => {
     const sort = req.query.sort || "createdAt";
 
     const order = req.query.order || "desc";
-
+    const restArr = [];
     const listings = await Listing.find({
       title: { $regex: searchTerm, $options: "i" },
       offer,
@@ -88,8 +88,13 @@ export const getListings = async (req, res, next) => {
       .sort({ [sort]: order })
       .limit(limit)
       .skip(startIndex);
-
-    return res.status(200).json(listings);
+    for (let i of listings) {
+      const { images: img, ...rest } = i._doc;
+      restArr.push(rest);
+    }
+    // res.status(200).json(rest);
+    return res.status(200).json(restArr);
+    // return res.status(200).json(listings);
   } catch (error) {
     next(error);
   }
