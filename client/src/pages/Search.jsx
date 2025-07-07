@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import ListingItem from "../components/ListingItem";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -17,14 +18,20 @@ export default function Search() {
   // console.log(location.search);
 
   const fetchListings = async () => {
-    setLoading(true);
-    const urlParams = new URLSearchParams(location.search);
-    const searchQuery = urlParams.toString();
-    console.log(searchQuery);
-    const res = await fetch(`/server/listing/get?${searchQuery}`);
-    const data = await res.json();
-    setListings(data);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const urlParams = new URLSearchParams(location.search);
+      const searchQuery = urlParams.toString();
+      console.log(searchQuery);
+      const res = await fetch(`/server/listing/get?${searchQuery}`);
+      const data = await res.json();
+      setListings(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching listings:", error);
+      setLoading(false);
+      return;
+    }
   };
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -86,13 +93,13 @@ export default function Search() {
     urlParams.set("sort", sidebardata.sort);
     urlParams.set("order", sidebardata.order);
     const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);    fetchListings();
-
+    navigate(`/search?${searchQuery}`);
+    fetchListings();
   };
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
+      <div className="p-7 border-slate-200 border-b-2 md:border-r-2 md:min-h-screen">
         <form onSubmit={handleSubmit} className="flex flex-col gap-8">
           <div className="flex items-center gap-2">
             <label
@@ -129,6 +136,7 @@ export default function Search() {
                 type="radio"
                 name="type"
                 id="all"
+                defaultChecked = {true}
                 className="w-5"
                 onChange={handleChange}
                 value={sidebardata.type === "all"}
@@ -199,10 +207,28 @@ export default function Search() {
           </button>
         </form>
       </div>
-      <div className="">
-        <h1 className="text-3xl font-semibold border-b p-3 text-slate-700 mt-5">
+      <div className="flex-1">
+        <h1 className="text-3xl border-slate-200 font-semibold border-b p-3 text-slate-700 mt-5">
           Listing results:
         </h1>
+        <div className="p-7 flex flex-wrap gap-4">
+          {!loading && listings.length === 0 && (
+            <p className="text-xl text-slate-700">
+              No listings found for your search criteria.
+            </p>
+          )}
+          {loading && (
+            <p className="text-xl text-slate-700 text-center w-full">
+              Loading...
+            </p>
+          )}
+          {listings && console.log(listings)}
+          {!loading &&
+            listings &&
+            listings.map((listing) => (
+              <ListingItem key={listing._id} listing={listing} />
+            ))}
+        </div>
       </div>
     </div>
   );

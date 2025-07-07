@@ -88,13 +88,13 @@ export const getListings = async (req, res, next) => {
       .sort({ [sort]: order })
       .limit(limit)
       .skip(startIndex);
-    for (let i of listings) {
-      const { images: img, ...rest } = i._doc;
-      restArr.push(rest);
-    }
-    // res.status(200).json(rest);
-    return res.status(200).json(restArr);
-    // return res.status(200).json(listings);
+    // for (let i of listings) {
+    //   const { images: img, ...rest } = i._doc;
+    //   restArr.push(rest);
+    // }
+
+    // return res.status(200).json(restArr);
+    return res.status(200).json(listings);
   } catch (error) {
     next(error);
   }
