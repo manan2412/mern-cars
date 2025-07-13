@@ -38,7 +38,10 @@ app.use("/server/listing", listingRouter);
 
 app.use(express.static(path.join(__dirname, "/client/dist")));
 
-app.get("*", (req, res) => {
+
+// In Express 4 and earlier, app.all('*') acted as a catch-all route for all requests without the need to name the wildcard. However, in Express 5, it seems that the unnamed wildcard is no longer allowed and must be named.
+// And Thus, we use app.get("/") to serve the index.html file for the root route.
+app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
 });
 
