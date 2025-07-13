@@ -65,6 +65,7 @@ export default function Search() {
         order: orderFromUrl || "desc",
       });
     }
+    fetchListings();
   }, [location.search]);
 
   const handleChange = (e) => {
@@ -155,6 +156,7 @@ export default function Search() {
                 className="w-5"
                 onChange={handleChange}
                 value={sidebardata.offer}
+                checked={sidebardata.offer === true}
               />
               <label htmlFor="offer">Offer</label>
             </div>
@@ -166,7 +168,7 @@ export default function Search() {
                 type="radio"
                 name="type"
                 id="all"
-                defaultChecked={true}
+                checked={sidebardata.type === "all"}
                 className="w-5"
                 onChange={handleChange}
                 value={sidebardata.type === "all"}
@@ -181,6 +183,7 @@ export default function Search() {
                 className="w-5"
                 onChange={handleChange}
                 value={sidebardata.type === "suv"}
+                checked={sidebardata.type === "suv"}
               />
               <label htmlFor="suv">SUV</label>
             </div>
@@ -192,6 +195,7 @@ export default function Search() {
                 id="hatchback"
                 onChange={handleChange}
                 value={sidebardata.type === "hatchback"}
+                checked={sidebardata.type === "hatchback"}
               />
               <label htmlFor="hatchback">Hatchback</label>
             </div>
@@ -203,6 +207,7 @@ export default function Search() {
                 id="sedan"
                 onChange={handleChange}
                 value={sidebardata.type === "sedan"}
+                checked={sidebardata.type === "sedan"}
               />
               <label htmlFor="sedan">Sedan</label>
             </div>
@@ -214,6 +219,7 @@ export default function Search() {
                 id="coupe"
                 onChange={handleChange}
                 value={sidebardata.type === "coupe"}
+                checked={sidebardata.type === "coupe"}
               />
               <label htmlFor="coupe">Coupe</label>
             </div>
